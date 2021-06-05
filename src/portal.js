@@ -59,21 +59,29 @@ AFRAME.registerComponent('portal', {
         cameraEl.components['look-controls'].yawObject.rotation.y += deltaRotation.y;
       }
 
-      const deltaPosition = new THREE.Vector3();
-      deltaPosition.subVectors(
+      const bufferDistance = 0.075; //teleports the player this distance away from the exit portal
+      const buffer = el.object3D.getWorldDirection(new THREE.Vector3()).multiplyScalar(bufferDistance);
+
+      const deltaPosition = new THREE.Vector3().subVectors(
         camera.getWorldPosition(new THREE.Vector3()),
         el.object3D.getWorldPosition(new THREE.Vector3())
       );
+      deltaPosition.sub(buffer);
 
-      const destPosition = destPortal.position.clone().add(deltaPosition);
+      const rotatedDelta = new THREE.Vector3();
+      const theta = deltaRotation.y;
+      rotatedDelta.x = deltaPosition.x * Math.cos(theta) - deltaPosition.z * Math.sin(theta);
+      rotatedDelta.z = deltaPosition.x * Math.sin(theta) + deltaPosition.z * Math.cos(theta);
 
-      camera.el.object3D.position.x = destPosition.x;
-      camera.el.object3D.position.y = destPosition.y;
-      camera.el.object3D.position.z = destPosition.z;
+      const destPosition = destPortal.position.clone().sub(rotatedDelta);
+
+      cameraEl.object3D.position.x = destPosition.x;
+      cameraEl.object3D.position.y = destPosition.y;
+      cameraEl.object3D.position.z = destPosition.z;
     });
 
+    //use sceneEl to store state
     if (!sceneEl.portals) {
-      //use sceneEl to store state
       sceneEl.portals = [];
       sceneEl.portalPairs = [];
     }
