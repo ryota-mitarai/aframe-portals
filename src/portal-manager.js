@@ -1,4 +1,4 @@
-AFRAME.registerComponent('portal-renderer', {
+AFRAME.registerComponent('portal-manager', {
   schema: {
     maxRecursion: { default: 2 },
   },

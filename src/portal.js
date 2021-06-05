@@ -75,10 +75,10 @@ AFRAME.registerComponent('portal', {
       sceneEl.portalPairs = [];
     }
 
-    //if there is not already a portal-renderer entity, create one
-    if (Array.from(sceneEl.children).reduce((acc, c) => acc || c.hasAttribute('portal-renderer'), false) === false) {
+    //if there is not already a portal-manager entity, create one
+    if (Array.from(sceneEl.children).reduce((acc, c) => acc || c.hasAttribute('portal-manager'), false) === false) {
       const entity = document.createElement('a-entity');
-      entity.setAttribute('portal-renderer', { maxRecursion: data.maxRecursion });
+      entity.setAttribute('portal-manager', { maxRecursion: data.maxRecursion });
       sceneEl.appendChild(entity);
     }
 

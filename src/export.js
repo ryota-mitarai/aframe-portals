@@ -1,2 +1,2 @@
 import './portal';
-import './portal-renderer';
+import './portal-manager';
