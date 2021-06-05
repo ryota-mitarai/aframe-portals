@@ -17,15 +17,13 @@ AFRAME.registerComponent('portal', {
     el.isCameraColliding = false;
 
     //portal mesh
-    const geometry = new THREE.BoxBufferGeometry(data.width, data.height, 0.01);
+    const geometry = new THREE.BoxBufferGeometry(data.width, data.height, 0.0001);
     const material = new THREE.MeshBasicMaterial({
       colorWrite: false,
     });
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.geometry.computeBoundingSphere();
     mesh.frustumCulled = true;
     mesh.matrixAutoUpdate = false;
-    mesh.renderOrder = 2;
     mesh.visible = true;
     mesh.name = 'portal-surface';
 
