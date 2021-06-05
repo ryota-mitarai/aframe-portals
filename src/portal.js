@@ -52,12 +52,12 @@ AFRAME.registerComponent('portal', {
 
       const deltaRotation = new THREE.Euler(
         srcRotation.x - dstRotation.x,
-        srcRotation.y - dstRotation.y,
+        srcRotation.y - dstRotation.y + Math.PI,
         srcRotation.z - dstRotation.z
       );
 
       if (cameraEl.components['look-controls']) {
-        cameraEl.components['look-controls'].yawObject.rotation.y += deltaRotation.y;
+        cameraEl.components['look-controls'].yawObject.rotation.y -= deltaRotation.y;
       }
 
       const bufferDistance = 0.075; //teleports the player this distance away from the exit portal
@@ -69,12 +69,12 @@ AFRAME.registerComponent('portal', {
       );
       deltaPosition.sub(buffer);
 
-      const rotatedDelta = new THREE.Vector3();
+      const rotatedDeltaPosition = new THREE.Vector3();
       const theta = deltaRotation.y;
-      rotatedDelta.x = deltaPosition.x * Math.cos(theta) - deltaPosition.z * Math.sin(theta);
-      rotatedDelta.z = deltaPosition.x * Math.sin(theta) + deltaPosition.z * Math.cos(theta);
+      rotatedDeltaPosition.x = deltaPosition.x * Math.cos(theta) - deltaPosition.z * Math.sin(theta);
+      rotatedDeltaPosition.z = deltaPosition.x * Math.sin(theta) + deltaPosition.z * Math.cos(theta);
 
-      const destPosition = destPortal.position.clone().sub(rotatedDelta);
+      const destPosition = destPortal.position.clone().add(rotatedDeltaPosition);
 
       cameraEl.object3D.position.x = destPosition.x;
       cameraEl.object3D.position.y = destPosition.y;
