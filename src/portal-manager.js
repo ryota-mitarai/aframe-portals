@@ -163,9 +163,17 @@ AFRAME.registerComponent('portal-manager', {
         bounds.zMax >= obj.zMin
       ) {
         //there is a collision
-        console.log('collision!');
         const portalEl = obj.portal.el;
-        portalEl.emit('camera-collision');
+        if (portalEl.isCameraColliding === false) {
+          portalEl.emit('camera-collision-start');
+          portalEl.isCameraColliding = true;
+        }
+      } else {
+        const portalEl = obj.portal.el;
+        if (portalEl.isCameraColliding === true) {
+          portalEl.emit('camera-collision-end');
+          portalEl.isCameraColliding = false;
+        }
       }
     });
   },

@@ -4,7 +4,7 @@ AFRAME.registerComponent('portal', {
     width: { default: 2 },
     height: { default: 3 },
     maxRecursion: { default: 2 },
-    teleportCooldown: { default: 200 }, //in ms
+    teleportCooldown: { default: 100 }, //in ms
     enableTeleport: { default: true },
   },
 
@@ -14,6 +14,7 @@ AFRAME.registerComponent('portal', {
     const data = this.data;
 
     el.justTeleported = false;
+    el.isCameraColliding = false;
 
     //portal mesh
     const geometry = new THREE.BoxBufferGeometry(data.width, data.height, 0.01);
@@ -34,7 +35,7 @@ AFRAME.registerComponent('portal', {
       el.justTeleported = true;
     });
 
-    el.addEventListener('camera-collision', function () {
+    el.addEventListener('camera-collision-start', function () {
       if (data.enableTeleport == false) return;
       if (el.justTeleported === true) return;
       el.justTeleported = true;
