@@ -1,5 +1,3 @@
-import './lib/aframe-aabb-collider-component.min';
-
 AFRAME.registerComponent('portal', {
   schema: {
     destSelector: { default: '' }, //rename
@@ -26,28 +24,20 @@ AFRAME.registerComponent('portal', {
     mesh.matrixAutoUpdate = false;
     mesh.renderOrder = 2;
     mesh.visible = true;
+    mesh.name = 'portal-surface';
 
     el.object3D.add(mesh);
-
-    sceneEl.addEventListener('loaded', () => {
-      const cameraEl = sceneEl.camera.el;
-      if (cameraEl.id) {
-        el.setAttribute('aabb-collider', { objects: `#${cameraEl.id}` });
-      } else {
-        cameraEl.id = 'web-portal-cam-tag';
-        el.setAttribute('aabb-collider', { objects: `#${cameraEl.id}` });
-      }
-    });
 
     sceneEl.addEventListener('portal-teleported', () => {
       el.justTeleported = true;
     });
 
-    el.addEventListener('hitstart', function () {
+    el.addEventListener('camera-collision', function () {
       if (el.justTeleported === true) return;
-      //teleport the camera
+      el.justTeleported = true;
       sceneEl.emit('portal-teleported');
 
+      //teleport the camera
       const camera = sceneEl.camera;
       const cameraEl = camera.el;
 

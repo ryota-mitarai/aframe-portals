@@ -5,6 +5,57 @@ AFRAME.registerComponent('portal-renderer', {
 
   init: function () {},
 
+  tick: function () {
+    const sceneEl = this.el.sceneEl;
+    const portals = sceneEl.portals;
+    const camera = sceneEl.camera;
+
+    //portal collision detection
+    const collisions = portals.map((portal) => {
+      const mesh = portal.children.filter((c) => c.name == 'portal-surface')[0];
+      const bbox = new THREE.Box3().setFromObject(mesh);
+      const bounds = {
+        portal: portal,
+        xMin: bbox.min.x,
+        xMax: bbox.max.x,
+        yMin: bbox.min.y,
+        yMax: bbox.max.y,
+        zMin: bbox.min.z,
+        zMax: bbox.max.z,
+      };
+      return bounds;
+    });
+
+    const width = 0.1; //width of user hitbox, arbitrary number
+
+    //calculate user bounds
+    const camPos = camera.getWorldPosition(new THREE.Vector3());
+    const bounds = {
+      xMin: camPos.x - width / 2,
+      xMax: camPos.x + width / 2,
+      yMin: camPos.y - width / 2,
+      yMax: camPos.y + width / 2,
+      zMin: camPos.z - width / 2,
+      zMax: camPos.z + width / 2,
+    };
+
+    collisions.forEach((obj) => {
+      if (
+        bounds.xMin <= obj.xMax &&
+        bounds.xMax >= obj.xMin &&
+        bounds.yMin <= obj.yMax &&
+        bounds.yMax >= obj.yMin &&
+        bounds.zMin <= obj.zMax &&
+        bounds.zMax >= obj.zMin
+      ) {
+        //there is a collision
+        console.log('collision!');
+        const portalEl = obj.portal.el;
+        portalEl.emit('camera-collision');
+      }
+    });
+  },
+
   tock: function () {
     const camera = this.el.sceneEl.camera;
     const renderer = this.el.sceneEl.renderer;
