@@ -4,6 +4,7 @@ AFRAME.registerComponent('portal', {
     width: { default: 2 },
     height: { default: 3 },
     maxRecursion: { default: 2 },
+    teleportCooldown: { default: 200 }, //in ms
   },
 
   init: function () {
@@ -109,7 +110,7 @@ AFRAME.registerComponent('portal', {
     if (el.justTeleported === true)
       setTimeout(() => {
         el.justTeleported = false;
-      }, 100);
+      }, this.data.teleportCooldown);
   },
 
   /*
