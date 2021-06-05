@@ -13,7 +13,9 @@ AFRAME.registerComponent('portal', {
     const sceneEl = el.sceneEl;
     const data = this.data;
 
-    el.setAttribute('visible', false); //tell aframe not to render this
+    el.justTeleported = false;
+
+    //el.setAttribute('visible', true); //tell aframe not to render this
 
     //portal mesh
     const geometry = new THREE.BoxBufferGeometry(data.width, data.height, 0.01);
@@ -39,20 +41,51 @@ AFRAME.registerComponent('portal', {
       }
     });
 
+    sceneEl.addEventListener('portal-teleported', () => {
+      el.justTeleported = true;
+    });
+
     el.addEventListener('hitstart', function () {
+      if (el.justTeleported === true) return;
       //teleport the camera
-      //const destPortal = document.querySelector(data.destSelector);
+      sceneEl.emit('portal-teleported');
+
+      const camera = sceneEl.camera;
+      const cameraEl = camera.el;
+
+      const destPortal = document.querySelector(data.destSelector).object3D;
+
+      const srcRotation = el.object3D.rotation;
+      const dstRotation = destPortal.rotation;
+
+      const deltaRotation = new THREE.Euler(
+        srcRotation.x - dstRotation.x,
+        srcRotation.y - dstRotation.y,
+        srcRotation.z - dstRotation.z
+      );
+
+      if (cameraEl.components['look-controls']) {
+        cameraEl.components['look-controls'].yawObject.rotation.y += deltaRotation.y;
+      }
+
+      const deltaPosition = new THREE.Vector3();
+      deltaPosition.subVectors(
+        camera.getWorldPosition(new THREE.Vector3()),
+        el.object3D.getWorldPosition(new THREE.Vector3())
+      );
+      console.log(deltaPosition);
+
+      const destPosition = destPortal.position.clone().add(deltaPosition);
+
+      camera.el.object3D.position.x = destPosition.x;
+      camera.el.object3D.position.y = destPosition.y;
+      camera.el.object3D.position.z = destPosition.z;
     });
 
     if (!sceneEl.portals) {
       //use sceneEl to store state
       sceneEl.portals = [];
       sceneEl.portalPairs = [];
-
-      //add portal rendering to the render loop
-      sceneEl.object3D.onAfterRender = (renderer, scene, camera) => {
-        this.renderRecursivePortals(renderer, camera);
-      };
     }
 
     const portals = sceneEl.portals;
@@ -77,7 +110,21 @@ AFRAME.registerComponent('portal', {
     }
   },
 
-  tick: function () {},
+  tick: function () {
+    const el = this.el;
+    if (el.justTeleported === true)
+      setTimeout(() => {
+        el.justTeleported = false;
+      }, 100);
+  },
+
+  tock: function () {
+    const sceneEl = this.el.sceneEl;
+    const camera = sceneEl.camera;
+    const renderer = sceneEl.renderer;
+
+    this.renderRecursivePortals(renderer, camera, 0);
+  },
 
   /*
   renderSinglePortal: function () {
@@ -129,7 +176,7 @@ AFRAME.registerComponent('portal', {
   },
   */
 
-  renderRecursivePortals: function (renderer, camera, recursionLevel = 0) {
+  renderRecursivePortals: function (renderer, camera, recursionLevel) {
     const sceneEl = this.el.sceneEl;
     const portals = sceneEl.portals;
     const pairs = sceneEl.portalPairs;

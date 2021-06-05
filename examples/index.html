@@ -10,18 +10,26 @@
       <!--Camera-->
       <a-entity position="0 1.6 0" camera wasd-controls="acceleration: 15;" look-controls="pointerLockEnabled: false">
         <a-cursor position="0 0 -.05" scale=".04 .04 1"></a-cursor>
-        <a-box></a-box>
+        <a-box scale="0.5 0.5 0.5"></a-box>
       </a-entity>
 
       <!--Portals-->
-      <a-entity id="portal1" portal="destSelector: #portal2" position="-3 1.5 -5.87"></a-entity>
-      <a-entity id="portal2" portal="destSelector: #portal1" position="-5.87 1.5 -3" rotation="0 90 0"></a-entity>
+      <a-entity id="portal1" portal="destSelector: #portal2" position="-3 1.5 -6"></a-entity>
+      <a-entity id="portal2" portal="destSelector: #portal1" position="-6 1.5 -3" rotation="0 90 0"></a-entity>
 
       <!--Environment-->
       <a-sky color="#aff"></a-sky>
       <a-plane rotation="-90 0 0" width="12" height="12" color="#3fa841"></a-plane>
-      <a-box position="0 2.5 -6" width="12" height="5" depth=".25" color="#a8413f"></a-box>
-      <a-box position="-6 2.5 0" rotation="0 90 0" width="12" height="5" depth=".25" color="#413fa8"></a-box>
+      <a-entity position="0 2.5 -6">
+        <a-box position="2 0 0" width="8" height="5" depth=".25" color="#a8413f"></a-box>
+        <a-box position="-5 0 0" width="2" height="5" depth=".25" color="#a8413f"></a-box>
+        <a-box position="-3 1.5 0" width="2" height="2" depth=".25" color="#a8413f"></a-box>
+      </a-entity>
+      <a-entity position="-6 2.5 0" rotation="0 90 0">
+        <a-box position="-2 0 0" width="8" height="5" depth=".25" color="#413fa8"></a-box>
+        <a-box position="5 0 0" width="2" height="5" depth=".25" color="#413fa8"></a-box>
+        <a-box position="3 1.5 0" width="2" height="2" depth=".25" color="#413fa8"></a-box>
+      </a-entity>
     </a-scene>
   </body>
 </html>
