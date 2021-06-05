@@ -5,6 +5,7 @@ AFRAME.registerComponent('portal', {
     height: { default: 3 },
     maxRecursion: { default: 2 },
     teleportCooldown: { default: 200 }, //in ms
+    enableTeleport: { default: true },
   },
 
   init: function () {
@@ -34,6 +35,7 @@ AFRAME.registerComponent('portal', {
     });
 
     el.addEventListener('camera-collision', function () {
+      if (data.enableTeleport == false) return;
       if (el.justTeleported === true) return;
       el.justTeleported = true;
       sceneEl.emit('portal-teleported');
