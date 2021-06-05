@@ -1,6 +1,6 @@
 AFRAME.registerComponent('portal', {
   schema: {
-    destSelector: { default: '' }, //rename
+    destination: { default: '' },
     width: { default: 2 },
     height: { default: 3 },
     maxRecursion: { default: 2 },
@@ -45,7 +45,7 @@ AFRAME.registerComponent('portal', {
       const camera = sceneEl.camera;
       const cameraEl = camera.el;
 
-      const destPortal = document.querySelector(data.destSelector).object3D;
+      const destPortal = document.querySelector(data.destination).object3D;
 
       const srcRotation = el.object3D.rotation;
       const dstRotation = destPortal.rotation;
@@ -99,7 +99,7 @@ AFRAME.registerComponent('portal', {
 
     portals.push(el.object3D);
 
-    const dest = document.querySelector(data.destSelector);
+    const dest = document.querySelector(data.destination);
     if (dest) {
       let isInPairs = false;
       pairs.forEach((pair) => {
@@ -137,7 +137,7 @@ AFRAME.registerComponent('portal', {
     const gl = renderer.getContext();
 
     const portal = this.el.object3D;
-    const destPortal = document.querySelector(this.data.destSelector).object3D;
+    const destPortal = document.querySelector(this.data.destination).object3D;
 
     const tmpScene = new THREE.Scene();
     tmpScene.children = scene.children;
