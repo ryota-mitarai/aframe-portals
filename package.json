@@ -9,7 +9,7 @@
   "files": [
     "dist/*.js*"
   ],
-  "source": "src/portal.js",
+  "source": "src/export.js",
   "main": "dist/aframe-portals.js",
   "exports": "dist/aframe-portals.modern.js",
   "module": "dist/aframe-portals.module.js",
