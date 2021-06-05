@@ -63,13 +63,12 @@ AFRAME.registerComponent('portal', {
       const bufferDistance = 0.075; //teleports the player this distance away from the exit portal
       const buffer = el.object3D.getWorldDirection(new THREE.Vector3()).multiplyScalar(bufferDistance);
 
-      const deltaPosition = new THREE.Vector3().subVectors(
-        camera.getWorldPosition(new THREE.Vector3()),
-        el.object3D.getWorldPosition(new THREE.Vector3())
-      );
-      deltaPosition.sub(buffer);
+      const cameraPosition = camera.getWorldPosition(new THREE.Vector3());
+      const portalPosition = el.object3D.getWorldPosition(new THREE.Vector3());
 
-      const rotatedDeltaPosition = new THREE.Vector3();
+      const deltaPosition = new THREE.Vector3().subVectors(cameraPosition, portalPosition).sub(buffer);
+
+      const rotatedDeltaPosition = deltaPosition.clone();
       const theta = deltaRotation.y;
       rotatedDeltaPosition.x = deltaPosition.x * Math.cos(theta) - deltaPosition.z * Math.sin(theta);
       rotatedDeltaPosition.z = deltaPosition.x * Math.sin(theta) + deltaPosition.z * Math.cos(theta);
