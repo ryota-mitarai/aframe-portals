@@ -18,7 +18,7 @@ AFRAME.registerComponent('portal', {
 
     //portal mesh
     const geometry = new THREE.BoxBufferGeometry(data.width, data.height, 0.0001);
-    const material = new THREE.MeshBasicMaterial();
+    const material = new THREE.MeshBasicMaterial({ colorWrite: false });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.name = 'portal-surface';
 
