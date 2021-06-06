@@ -1,23 +1,33 @@
 AFRAME.registerComponent('portal-manager', {
   schema: {
-    maxRecursion: { default: 2 },
+    skipTicks: { default: 25 },
+    maxRecursion: { default: 0 },
   },
 
-  init: function () {},
+  init: function () {
+    const data = this.data;
+    const sceneEl = this.el.sceneEl;
+
+    data.ticks = 0;
+
+    data.maxRecursion = sceneEl.portals.reduce((acc, obj) => Math.max(acc, obj.maxRecursion), data.maxRecursion);
+  },
 
   tick: function () {
+    const data = this.data;
     const sceneEl = this.el.sceneEl;
     const portals = sceneEl.portals;
 
-    //sort portals by distance to camera
-    const cameraPosition = sceneEl.camera.getWorldPosition(new THREE.Vector3());
-    const sortedPortals = portals
-      .map((portal) => {
-        return { portal: portal, distance: portal.getWorldPosition(new THREE.Vector3()).distanceTo(cameraPosition) };
-      })
-      .sort((a, b) => b.distance - a.distance);
+    if (data.ticks % data.skipTicks === 0) {
+      //sort portals by distance to camera
+      const cameraPosition = sceneEl.camera.getWorldPosition(new THREE.Vector3());
+      portals.forEach((obj) => {
+        obj.distance = obj.portal.getWorldPosition(new THREE.Vector3()).distanceTo(cameraPosition);
+      });
+      portals.sort((a, b) => b.distance - a.distance);
+    }
 
-    sceneEl.portals = sortedPortals.map((obj) => obj.portal);
+    data.ticks++;
   },
 
   tock: function () {
@@ -35,12 +45,14 @@ AFRAME.registerComponent('portal-manager', {
 
     const gl = renderer.getContext();
 
+    const tmpScene = sceneEl.object3D.clone();
+
     renderer.autoClear = false;
     camera.matrixAutoUpdate = false;
 
-    portals.forEach((portal) => {
-      const destId = portal.el.components['portal'].data.destination;
-      const destPortal = document.querySelector(destId).object3D;
+    portals.forEach((obj) => {
+      const portal = obj.portal;
+      const destPortal = obj.destination;
 
       gl.colorMask(false, false, false, false);
       gl.depthMask(false);
@@ -71,12 +83,6 @@ AFRAME.registerComponent('portal-manager', {
         gl.stencilMask(0x00);
         gl.stencilFunc(gl.EQUAL, recursionLevel + 1, 0xff);
 
-        const nonPortals = new THREE.Scene();
-        nonPortals.children = sceneEl.object3D.children.filter((obj) => !portals.includes(obj));
-
-        const tmpScene = new THREE.Scene();
-        tmpScene.children = sceneEl.object3D.children;
-
         //render the rest of the scene, limited to the stencil buffer
         renderer.render(tmpScene, virtualCam);
       } else {
@@ -104,8 +110,8 @@ AFRAME.registerComponent('portal-manager', {
     renderer.clear(false, true, false);
 
     //render portals into depth buffer
-    portals.forEach((portal) => {
-      renderer.render(portal, camera);
+    portals.forEach((obj) => {
+      renderer.render(obj.portal, camera);
     });
 
     gl.depthFunc(gl.LESS);
@@ -115,11 +121,8 @@ AFRAME.registerComponent('portal-manager', {
     gl.colorMask(true, true, true, true);
     gl.depthMask(true);
 
-    const nonPortals = new THREE.Scene();
-    nonPortals.children = sceneEl.object3D.children.filter((obj) => !portals.includes(obj));
-
     //render the rest of the scene, but only at recursionLevel
-    renderer.render(nonPortals, camera);
+    renderer.render(tmpScene, camera);
 
     camera.matrixAutoUpdate = true;
   },
@@ -130,7 +133,8 @@ AFRAME.registerComponent('portal-manager', {
     const camera = sceneEl.camera;
 
     //portal collision detection
-    const collisions = portals.map((portal) => {
+    const collisions = portals.map((obj) => {
+      const portal = obj.portal;
       const mesh = portal.children.filter((c) => c.name == 'portal-surface')[0];
       const bbox = new THREE.Box3().setFromObject(mesh);
       const bounds = {

@@ -3,7 +3,7 @@ AFRAME.registerComponent('portal', {
     destination: { default: '' },
     width: { default: 2 },
     height: { default: 3 },
-    maxRecursion: { default: 2 },
+    maxRecursion: { default: 0 },
     teleportCooldown: { default: 100 }, //in ms
     enableTeleport: { default: true },
   },
@@ -76,7 +76,6 @@ AFRAME.registerComponent('portal', {
     //use sceneEl to store state
     if (!sceneEl.portals) {
       sceneEl.portals = [];
-      sceneEl.portalPairs = [];
     }
 
     //if there is not already a portal-manager entity, create one
@@ -86,26 +85,17 @@ AFRAME.registerComponent('portal', {
       sceneEl.appendChild(entity);
     }
 
+    //add this portal to the 'portals' list
     const portals = sceneEl.portals;
-    const pairs = sceneEl.portalPairs;
-
-    portals.push(el.object3D);
-
     const dest = document.querySelector(data.destination);
-    if (dest) {
-      let isInPairs = false;
-      pairs.forEach((pair) => {
-        pair.forEach((portal) => {
-          if (portal == el.object3D) {
-            isInPairs = true;
-          }
-        });
-      });
 
-      if (isInPairs == false) {
-        pairs.push([el.object3D, dest.object3D]);
-      }
-    }
+    const portalObj = {
+      portal: el.object3D,
+      destination: dest.object3D,
+      maxRecursion: data.maxRecursion,
+      distance: 0,
+    };
+    portals.push(portalObj);
   },
 
   tick: function () {
