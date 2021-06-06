@@ -14,21 +14,21 @@
       </a-entity>
 
       <!--Corner Portals-->
-      <a-entity id="portal1" portal="destination: #portal2; maxRecursion:1" position="-3 1.5 -6"></a-entity>
+      <a-entity id="portal1" portal="destination: #portal2; maxRecursion: 1" position="-3 1.5 -6"></a-entity>
       <a-entity id="portal2" portal="destination: #portal1" position="-6 1.5 -3" rotation="0 90 0"></a-entity>
 
       <!--Tunnel-->
       <a-entity id="portal3" portal="destination: #portal5" position="3 1.5 0" rotation="0 180 0"></a-entity>
       <a-entity id="portal4" portal="destination: #portal6" position="3 1.5 3"></a-entity>
-      <a-box position="3 1.5 1.5" width="2" height="3" depth="2.99" material="color:lightgreen"></a-box>
+      <a-box position="3 1.5 1.5" width="2" height="3" depth="2.99" material="color: lightgreen"></a-box>
 
-      <a-entity id="portal5" portal="destination: #portal3" position="3 100.5 0"></a-entity>
-      <a-entity id="portal6" portal="destination: #portal4" position="3 100.5 10" rotation="0 180 0"></a-entity>
-      <a-box position="3 100.5 5" width="2" height="3" depth="10.01" material="side:back; color:pink"></a-box>
+      <a-entity id="portal5" portal="destination: #portal3" position="3 -10 0"></a-entity>
+      <a-entity id="portal6" portal="destination: #portal4" position="3 -10 10" rotation="0 180 0"></a-entity>
+      <a-box position="3 -10 5" width="2" height="3" depth="10.01" material="side: back; color: pink"></a-box>
 
       <!--Environment-->
       <a-sky color="#aff"></a-sky>
-      <a-plane rotation="-90 0 0" width="12" height="12" material="shader:flat; color:#3fa841"></a-plane>
+      <a-plane rotation="-90 0 0" width="12" height="12" material="shader: flat; color: #3fa841"></a-plane>
       <a-entity position="0 2.5 -6">
         <a-box position="2 0 0" width="8" height="5" depth=".25" color="#a8413f"></a-box>
         <a-box position="-5 0 0" width="2" height="5" depth=".25" color="#a8413f"></a-box>
