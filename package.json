@@ -1,9 +1,9 @@
 {
   "name": "aframe-portals",
   "version": "1.0.0",
-  "homepage": "",
-  "description": "",
-  "repository": "",
+  "homepage": "https://github.com/ryota-mitarai/aframe-portals",
+  "description": "An aframe component for creating portals.",
+  "repository": "https://github.com/ryota-mitarai/aframe-portals.git",
   "author": "ryota-mitarai",
   "license": "MIT",
   "files": [
