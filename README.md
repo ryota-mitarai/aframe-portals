@@ -23,16 +23,17 @@ Set the recursion level by setting the _maxRecursion_ property on one of the por
 
 ### Properties
 
-| Property         | Description                                                                       | Default |
-| ---------------- | --------------------------------------------------------------------------------- | ------- |
-| destination      | a CSS selector of the destination portal                                          | ""      |
-| width            | width of the portal                                                               | 2       |
-| height           | height of the portal                                                              | 3       |
-|                  |                                                                                   |         |
-| maxRecursion     | how many recursion levels to render - only the highest value in the scene is used | 0       |
-| teleportCooldown | cooldown in ms after a teleportation, where the user cannot be teleported         | 100     |
-|                  |                                                                                   |         |
-| enableTeleport   | enables teleportation when the camera collides with the portal                    | true    |
+| Property         | Description                                                                                                          | Default |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------- | ------- |
+| destination      | a CSS selector of the destination portal                                                                             | ""      |
+| width            | width of the portal                                                                                                  | 2       |
+| height           | height of the portal                                                                                                 | 3       |
+|                  |                                                                                                                      |         |
+| maxRecursion     | how many recursion levels to render - only the highest value in the scene is used                                    | 0       |
+| player           | a CSS selector of the player entity - only needs to be given once per scene. If not given will use the camera entity | ''      |
+| teleportCooldown | cooldown in ms after a teleportation, where the user cannot be teleported                                            | 100     |
+|                  |                                                                                                                      |         |
+| enableTeleport   | enables teleportation when the camera collides with the portal                                                       | true    |
 
 ## Additional Info
 

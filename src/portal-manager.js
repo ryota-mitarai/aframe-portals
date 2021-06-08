@@ -4,6 +4,7 @@ AFRAME.registerComponent('portal-manager', {
   schema: {
     skipTicks: { default: 25 },
     maxRecursion: { default: 0 },
+    player: { default: '' },
   },
 
   init: function () {
@@ -12,6 +13,11 @@ AFRAME.registerComponent('portal-manager', {
 
     data.ticks = 0;
     data.maxRecursion = sceneEl.portals.reduce((acc, obj) => Math.max(acc, obj.maxRecursion), data.maxRecursion);
+
+    const playerSelector = sceneEl.portals.reduce((acc, obj) => acc || obj.player, data.player);
+    if (playerSelector) {
+      this.el.sceneEl.player = document.querySelector(playerSelector);
+    }
   },
 
   tick: function () {

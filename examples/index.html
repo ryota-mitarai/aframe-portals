@@ -8,13 +8,23 @@
   <body>
     <a-scene>
       <!--Camera-->
-      <a-entity position="0 1.6 0" camera wasd-controls="acceleration: 10;" look-controls="pointerLockEnabled: false">
+      <a-entity
+        id="player"
+        position="0 1.6 0"
+        camera
+        wasd-controls="acceleration: 10;"
+        look-controls="pointerLockEnabled: false"
+      >
         <a-cursor position="0 0 -.05" scale=".04 .04 1"></a-cursor>
         <a-box scale="0.5 0.5 0.5"></a-box>
       </a-entity>
 
       <!--Corner Portals-->
-      <a-entity id="portal1" portal="destination: #portal2; maxRecursion: 1" position="-3 1.5 -6"></a-entity>
+      <a-entity
+        id="portal1"
+        portal="destination: #portal2; maxRecursion: 1; player: #player"
+        position="-3 1.5 -6"
+      ></a-entity>
       <a-entity id="portal2" portal="destination: #portal1" position="-6 1.5 -3" rotation="0 90 0"></a-entity>
 
       <!--Tunnel-->

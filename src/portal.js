@@ -4,6 +4,7 @@ AFRAME.registerComponent('portal', {
     width: { default: 2 },
     height: { default: 3 },
     maxRecursion: { default: 0 },
+    player: { default: '' },
     teleportCooldown: { default: 100 }, //in ms
     enableTeleport: { default: true },
   },
@@ -34,10 +35,11 @@ AFRAME.registerComponent('portal', {
       el.justTeleported = true;
       sceneEl.emit('portal-teleported');
 
-      //teleport the camera
+      //teleport the player
       const camera = sceneEl.camera;
       const cameraEl = camera.el;
 
+      const player = sceneEl.player.object3D || cameraEl;
       const destPortal = document.querySelector(data.destination).object3D;
 
       const srcRotation = el.object3D.rotation;
@@ -56,10 +58,10 @@ AFRAME.registerComponent('portal', {
       const bufferDistance = 0.075; //teleports the player this distance away from the exit portal
       const buffer = el.object3D.getWorldDirection(new THREE.Vector3()).multiplyScalar(bufferDistance);
 
-      const cameraPosition = camera.getWorldPosition(new THREE.Vector3());
+      const playerPosition = player.getWorldPosition(new THREE.Vector3());
       const portalPosition = el.object3D.getWorldPosition(new THREE.Vector3());
 
-      const deltaPosition = new THREE.Vector3().subVectors(cameraPosition, portalPosition).sub(buffer);
+      const deltaPosition = new THREE.Vector3().subVectors(playerPosition, portalPosition).sub(buffer);
 
       const rotatedDeltaPosition = deltaPosition.clone();
       const theta = deltaRotation.y;
@@ -68,9 +70,9 @@ AFRAME.registerComponent('portal', {
 
       const destPosition = destPortal.position.clone().add(rotatedDeltaPosition);
 
-      cameraEl.object3D.position.x = destPosition.x;
-      cameraEl.object3D.position.y = destPosition.y;
-      cameraEl.object3D.position.z = destPosition.z;
+      player.position.x = destPosition.x;
+      player.position.y = destPosition.y;
+      player.position.z = destPosition.z;
     });
 
     //use sceneEl to store state
@@ -93,6 +95,7 @@ AFRAME.registerComponent('portal', {
       portal: el.object3D,
       destination: dest.object3D,
       maxRecursion: data.maxRecursion,
+      player: data.player,
       distance: 0,
     };
     portals.push(portalObj);
